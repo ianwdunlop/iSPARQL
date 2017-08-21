@@ -824,7 +824,7 @@ iSPARQL.QBE = function (def_obj) {
 	    var params = {
 		endpoint:iSPARQL.endpointOpts.endpointPath,
 		query:
-		'define get:soft "replacing" \n'+
+		'define get:soft "soft" \n'+
 		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
 		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
 		'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n' +
