@@ -765,10 +765,35 @@ iSPARQL.QBE = function (def_obj) {
 	Update:function(node) { /* get Classes and Properties for a prefix */
     var me = self;
 	    if (node.children.length > 0) { return; } /* nothing when already fetched */
-	    var callback = function(data) {
+	    var oldIcon = "";
+	    var oldFilter = "";
+    var query =   
+		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
+		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
+		'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n' +
+		'\n' +
+		'SELECT DISTINCT ?type ?uri ?label ?comment ?range \n' +
+		'FROM <' + node.schema + '> \n' +
+		'WHERE { \n ' +
+		'    		{\n ' +
+		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>) } UNION\n' +
+		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#Class>) } UNION\n' +
+		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2000/01/rdf-schema#Class>) } UNION\n' +
+		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#ObjectProperty>) } UNION\n' +
+		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#DatatypeProperty>) } UNION\n' +
+		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#InverseFunctionalProperty>) } }\n' +
+		'         OPTIONAL { ?uri rdfs:label ?label } .' + '\n' +
+		'         OPTIONAL { ?uri rdfs:comment ?comment } .' + '\n' +
+		'         OPTIONAL { ?uri rdfs:range ?range } .' + '\n' +
+		'} ORDER BY ?uri';
+	  self.sponge_me ? query = 'define get:soft "soft" \n' + query : '';
+    var request = new XMLHttpRequest();
+    request.open("GET", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(query), true);
+    request.setRequestHeader('Accept', 'application/sparql-results+json');
+    request.onreadystatechange = function () {
+        if (request.readyState != 4 || request.status != 200) return;
         me.sponge_me = false;
-		var JSONData = eval('(' + data + ')');
-
+		var JSONData = JSON.parse(request.responseText);
 		var insert = function(obj,type,schemaParts) {
 		    var uri = obj.uri.value;
 		    var parts = self.getPrefixParts(uri);
@@ -821,56 +846,14 @@ iSPARQL.QBE = function (def_obj) {
 			insert(r,type,schemaParts);
 		    }
 		} /* if data ok */
-	    }
-	    var oldIcon = "";
-	    var oldFilter = "";
-    var query =   
-		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
-		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
-		'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n' +
-		'\n' +
-		'SELECT DISTINCT ?type ?uri ?label ?comment ?range \n' +
-		'FROM <' + node.schema + '> \n' +
-		'WHERE { \n ' +
-		'    		{\n ' +
-		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>) } UNION\n' +
-		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#Class>) } UNION\n' +
-		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2000/01/rdf-schema#Class>) } UNION\n' +
-		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#ObjectProperty>) } UNION\n' +
-		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#DatatypeProperty>) } UNION\n' +
-		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/2002/07/owl#InverseFunctionalProperty>) } }\n' +
-		'         OPTIONAL { ?uri rdfs:label ?label } .' + '\n' +
-		'         OPTIONAL { ?uri rdfs:comment ?comment } .' + '\n' +
-		'         OPTIONAL { ?uri rdfs:range ?range } .' + '\n' +
-		'} ORDER BY ?uri';
-	  self.sponge_me ? query = 'define get:soft "replacing" \n' + query : '';
-	    var params = {
-		endpoint:iSPARQL.endpointOpts.endpointPath,
-		query: query,
-		//default_graph_uri:node.li.uri,
-		default_graph_uri:'',
-		maxrows:1000,
-		should_sponge:((node.bound)?'':'soft'),
-		format:'application/sparql-results+json',
-		errorHandler:function(xhr) {
-		    var status = xhr.getStatus();
-		    var response = xhr.getResponseText();
-		    var headers = xhr.getAllResponseHeaders();
-		    alert(response);
-		},
-		onstart:function() {
-		    oldIcon = node._icon.src;
-		    oldFilter = node._icon.style.filter;
-		    node._icon.src = OAT.Preferences.imagePath+"Dav_throbber.gif";
-		    node._icon.style.filter = "";
-		},
-		onend:function() {
 		    node._icon.src = oldIcon;
 		    node._icon.style.filter = oldFilter;
-		},
-		callback:callback
-	    }
-	    iSPARQL.QueryExec(params);
+    };
+    request.send(null);
+		    oldIcon = node._icon.src;
+	    oldFilter = node._icon.style.filter;
+		    node._icon.src = OAT.Preferences.imagePath+"Dav_throbber.gif";
+		    node._icon.style.filter = "";
 	}, /* Schemas.Update */
 	Refresh:function(force) { /* get a list of prefixes */
 	    if (self.Schemas.Unbound.state == 0 && !force) { return; }
