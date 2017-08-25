@@ -1,0 +1,29 @@
+{
+  "name": "isparql",
+  "version": "1.0.0",
+  "description": "visual SPARQL query builder",
+  "main": "gulpFile.js",
+  "dependencies": {},
+  "devDependencies": {
+    "connect-modrewrite": "^0.10.1",
+    "gulp": "^3.9.1",
+    "gulp-connect": "^5.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ianwdunlop/iSPARQL.git"
+  },
+  "keywords": [
+    "sparql",
+    "javascript"
+  ],
+  "author": "Ian Dunlop + Openlink Software",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/ianwdunlop/iSPARQL/issues"
+  },
+  "homepage": "https://github.com/ianwdunlop/iSPARQL#readme"
+}
