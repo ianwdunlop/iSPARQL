@@ -548,6 +548,7 @@ iSPARQL.QBE = function (def_obj) {
 			 self.Schemas.Refresh()
 			     });
     OAT.Event.attach("schema_import","click",function() {
+           self.sponge_me = true;
 		       self.Schemas.Import($v('schema').trim());
 		   });
     OAT.Event.attach("schema_remove","click",function() {
@@ -762,8 +763,10 @@ iSPARQL.QBE = function (def_obj) {
 	    if (!schemaNode.children.length) { root.deleteChild(schemaNode); }
 	},
 	Update:function(node) { /* get Classes and Properties for a prefix */
+    var me = self;
 	    if (node.children.length > 0) { return; } /* nothing when already fetched */
 	    var callback = function(data) {
+        me.sponge_me = false;
 		var JSONData = eval('(' + data + ')');
 
 		var insert = function(obj,type,schemaParts) {
@@ -821,10 +824,7 @@ iSPARQL.QBE = function (def_obj) {
 	    }
 	    var oldIcon = "";
 	    var oldFilter = "";
-	    var params = {
-		endpoint:iSPARQL.endpointOpts.endpointPath,
-		query:
-		'define get:soft "soft" \n'+
+    var query =   
 		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
 		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
 		'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n' +
@@ -842,8 +842,11 @@ iSPARQL.QBE = function (def_obj) {
 		'         OPTIONAL { ?uri rdfs:label ?label } .' + '\n' +
 		'         OPTIONAL { ?uri rdfs:comment ?comment } .' + '\n' +
 		'         OPTIONAL { ?uri rdfs:range ?range } .' + '\n' +
-		'}' + '\n' +
-		'ORDER BY ?uri',
+		'} ORDER BY ?uri';
+	  self.sponge_me ? query = 'define get:soft "replacing" \n' + query : '';
+	    var params = {
+		endpoint:iSPARQL.endpointOpts.endpointPath,
+		query: query,
 		//default_graph_uri:node.li.uri,
 		default_graph_uri:'',
 		maxrows:1000,
