@@ -262,7 +262,8 @@ iSPARQL.Advanced = function () {
     this.func_load_to_qbe = function() {
 	if (OAT.Browser.isIE || OAT.Browser.isScreenOnly) { return; }
 	tab.go(tab_qbe);
-	qbe.loadFromString($('query').value);
+	//qbe.loadFromString($('query').value);
+	qbe.loadFromString(yasqe.getValue());
 	if ($v('qbe_graph') == '')
 	    $('qbe_graph').value = $v('default-graph-uri').trim();
 	$('qbe_sponge').value = $v('adv_sponge');
@@ -275,7 +276,8 @@ iSPARQL.Advanced = function () {
 
 	//if (tab.selectedIndex != 1 && !tab_query.window) return;
 	$('adv_sponge').value = $v('qbe_sponge');
-	iSPARQL.Common.setQuery(qbe.QueryGenerate());
+  yasqe.setValue(qbe.QueryGenerate());
+	//iSPARQL.Common.setQuery(qbe.QueryGenerate());
 	iSPARQL.Common.setDefaultGraph($v('qbe_graph'));
 	self.redraw();
     }

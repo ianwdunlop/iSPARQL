@@ -33,11 +33,11 @@
 
   <link type="text/css" rel="stylesheet" href="/isparql/styles/style.css"/>
   <link type="text/css" rel="stylesheet" href="/isparql/styles/execute.css"/>
-  <link media="only screen and (max-device-width: 480px)" 
+  <link href='/isparql/styles/yasqe.css' rel='stylesheet' type='text/css'/>
+  <link media="only screen and (max-device-width: 480px)/ 
         type="text/css" 
 	rel="stylesheet" 
 	href="/isparql/styles/mobile.css"/>
-
   <script type="text/javascript">
 
 window.YMAPPID = 'yahoo-id';
@@ -55,7 +55,7 @@ var featureList = ["keyboard","dimmer","tab","ajax","combolist","win","tree","gr
   <script type="text/javascript" src="js/main.js"></script>
   <script type="text/javascript" src="js/qbe.js"></script>
   <script type="text/javascript" src="js/ubiq.js"></script>
-
+  <script type="text/javascript" src="js/yasqe.bundled.js"></script>
   <script type="text/javascript">
 
 // XXX should be done in defaults.js
@@ -378,10 +378,12 @@ WHERE     {	?thing a ?type;
                 </a>
 	      </div> <!-- #topbox_ctl -->
 	      <label for="query">SPARQL Query</label><br/>
-	      <div style="clear:both;">
+<!--	      <div style="clear:both;">
 	        <textarea id="query" name="query" wrap="off"></textarea>
 	      </div><br/>
-	      <!--div>
+-->
+        <div id="yasqe-area" style="clear:both;"></div>
+        <!--div>
 	        <input type="button" value="Use Query & Close" id="return_btn" style="display:none">
 	      </div-->
 	    </form>
@@ -763,5 +765,11 @@ WHERE     {	?thing a ?type;
       </div>
     </div>
   </div>
+  <script type="text/javascript">
+     var yasqe;
+     window.onload = function() {
+       yasqe = YASQE(document.getElementById("yasqe-area")); 
+     };
+  </script>
 </body>
 </html>
