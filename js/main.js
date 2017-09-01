@@ -402,10 +402,13 @@ iSPARQL.RecentQueriesUI = function () {
 	OAT.Dom.option ('-- Recent Queries --','', self.sel_ctl);
 	var lst = self.buf.toList().reverse();
 	for (i=0;i<lst.length;i++) {
-	    var n = lst[i].substr(0,35);
-	    var v = lst[i];
-	    var o = OAT.Dom.option (n,v,self.sel_ctl);
-	    o.title = v;
+      // check if query is string - found edge case where it was a boolean "false"
+      if (typeof(lst[i]) === "string") {
+	      var n = lst[i].substr(0,35);
+	      var v = lst[i];
+	      var o = OAT.Dom.option (n,v,self.sel_ctl);
+	      o.title = v;
+      }
 	}
 	OAT.Dom.option ('CLEAR RECENTS','--CLEAR--', self.sel_ctl);
     }

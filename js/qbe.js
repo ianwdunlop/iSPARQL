@@ -1470,20 +1470,38 @@ iSPARQL.QBE = function (def_obj) {
 	
 	var lc = [];
 
-	if (qe.detectLocationMacros(p.query)) {
-	    if (!iSPARQL.locationCache) {
-		if (!!localStorage && !!localStorage.iSPARQL_locationCache)
-		    lc = localStorage.iSPARQL_locationCache;
-		iSPARQL.locationCache = new iSPARQL.LocationCache (10, lc, true);
-	    }
-	    var locUI = new iSPARQL.locationAcquireUI ({useCB: qe.executeWithLocation, 
-                cancelCB: false,
-		cbParm: p,
-		cache: iSPARQL.locationCache});
-	    locUI.refresh();
-	} else {
-	qe.execute(p);
-    }
+//	if (qe.detectLocationMacros(p.query)) {
+//	    if (!iSPARQL.locationCache) {
+//		if (!!localStorage && !!localStorage.iSPARQL_locationCache)
+//		    lc = localStorage.iSPARQL_locationCache;
+//		iSPARQL.locationCache = new iSPARQL.LocationCache (10, lc, true);
+//	    }
+//	    var locUI = new iSPARQL.locationAcquireUI ({useCB: qe.executeWithLocation, 
+//                cancelCB: false,
+//		cbParm: p,
+//		cache: iSPARQL.locationCache});
+//	    locUI.refresh();
+//	} else {
+    var request = new XMLHttpRequest();
+    request.open("POST", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(p.query + " LIMIT 100"), true);
+    request.setRequestHeader('Accept', 'application/sparql-results+json');
+    request.onreadystatechange = function () {
+        if (request.readyState != 4 || request.status != 200) return;
+		    //var JSONData = JSON.parse(request.responseText);
+        var res = document.getElementById('tab_results');
+        var ele = document.createElement("div");
+        ele.id = "yasr-results";
+        res.appendChild(ele);
+        var yasr = YASR(document.getElementById("yasr-results"));
+        yasr.setResponse(request.responseText);
+        tab.go(tab_results);
+		}
+    var limit_query = p.query + " LIMIT 100";
+    request.send(null);
+
+	//qe.execute(p);
+
+//    }
     }
 
     this.loadFromString = function(data) {
