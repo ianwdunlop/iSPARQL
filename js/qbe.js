@@ -1482,19 +1482,15 @@ iSPARQL.QBE = function (def_obj) {
 //		cache: iSPARQL.locationCache});
 //	    locUI.refresh();
 //	} else {
+  	var me = this;
     var request = new XMLHttpRequest();
     request.open("POST", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(p.query + " LIMIT 100"), true);
     request.setRequestHeader('Accept', 'application/sparql-results+json');
     request.onreadystatechange = function () {
         if (request.readyState != 4 || request.status != 200) return;
-		    //var JSONData = JSON.parse(request.responseText);
-        var res = document.getElementById('tab_results');
-        var ele = document.createElement("div");
-        ele.id = "yasr-results";
-        res.appendChild(ele);
-        var yasr = YASR(document.getElementById("yasr-results"));
-        yasr.setResponse(request.responseText);
+        // switch tabs first or else the results don't display
         tab.go(tab_results);
+        yasr.setResponse(request.responseText);
 		}
     var limit_query = p.query + " LIMIT 100";
     request.send(null);

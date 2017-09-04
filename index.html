@@ -534,7 +534,7 @@ WHERE     {	?thing a ?type;
         <br style="clear:both;" />
         </div> <!-- queryopts_ctr -->
       </div> <!-- #queryopts_outer -->
-	<div class="main_col_page" id="page_results"></div>
+      <div class="main_col_page" id="page_results"></div>
         <div id="foot">
 	      <div id="data_links" style="display:none">Raw Linked Data formats: 
             <span id="cxml_raw_lnk_c" style="display:none"><a id="cxml_raw_lnk">CXML</a> | </span><a id="csv_raw_lnk">CSV</a> |
@@ -769,8 +769,17 @@ WHERE     {	?thing a ?type;
   </div>
   <script type="text/javascript">
      var yasqe;
+     var yasr;
      window.onload = function() {
-       yasqe = YASQE(document.getElementById("yasqe-area")); 
+        yasqe = YASQE(document.getElementById("yasqe-area"));
+        var res_tabs = document.getElementById('page_results');
+        while (res_tabs.hasChildNodes()) {
+            res_tabs.removeChild(res_tabs.lastChild);
+        }
+        var ele = document.createElement("div");
+        ele.id = "yasr-results";
+        res_tabs.appendChild(ele);
+        yasr = YASR(document.getElementById("yasr-results"));
      };
   </script>
 </body>
