@@ -225,7 +225,7 @@ iSPARQL.Advanced = function () {
 // 
 
 	var o = {
-	    query:iSPARQL.dataObj.query,
+      query: yasqe.getValue(),
 	    defaultGraph:iSPARQL.dataObj.defaultGraph,
 	    endpoint:iSPARQL.endpointOpts.endpointPath,
 	    pragmas:iSPARQL.endpointOpts.pragmas,
@@ -255,7 +255,18 @@ iSPARQL.Advanced = function () {
 													    minAcc: iSPARQL.Settings.locOpts.minAcc});
 //			locUI.refresh();
 	} else {
-	qe.execute(o);
+  	var me = this;
+    var request = new XMLHttpRequest();
+    request.open("POST", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(o.query), true);
+    request.setRequestHeader('Accept', 'application/sparql-results+json');
+    request.onreadystatechange = function () {
+        if (request.readyState != 4 || request.status != 200) return;
+        // switch tabs first or else the results don't display
+        tab.go(tab_results);
+        yasr.setResponse(request.responseText);
+		}
+    request.send(null);
+//	qe.execute(o);
     }
     }
 
