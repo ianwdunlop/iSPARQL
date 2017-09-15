@@ -2223,6 +2223,11 @@ function set_dav_props(res){
 
 function prefix_insert(){
     prefix = $v('prefix');
+    var value = yasqe.getValue();
+    if (value.indexOf(prefix) == -1) {
+        value = prefix + '\n' + value;
+        yasqe.setValue(value);
+    }
     if ($v('query').indexOf(prefix) == -1)
 	$('query').value = prefix + '\n' + $v('query');
 }
