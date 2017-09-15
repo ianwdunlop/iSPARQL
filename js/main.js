@@ -2235,8 +2235,9 @@ function prefix_insert(){
 //
 function template_insert(){
     template = $v('template');
-    insert_text($('query'),template);
+    //insert_text($('query'),template);
     $('template').selectedIndex = 0;
+    yasqe.setValue(template);
 }
 
 function tool_invoke(){
