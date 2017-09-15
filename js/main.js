@@ -2251,71 +2251,79 @@ function tool_put(txt){
 }
 
 function tool_put_line_start(txt){
-    var query = $('query');
-    var query_value = $v('query').replace("\r",'');
-    var lines = query_value.split("\n");
+    var line_obj = yasqe.getCursor();
+    var line = '#' + yasqe.getLine(line_obj['line']);
+    yasqe.replaceRange(line, {line: line_obj['line'], ch:0}, {line: line_obj['line'], ch: yasqe.getLine(line_obj['line']).length});
+//    var query = $('query');
+//    var query_value = $v('query').replace("\r",'');
+//    var lines = query_value.split("\n");
 
-    var pos = getPos(query);
-    start = pos[0];
-    end   = pos[1];
-    var nl = 0;
-    if (start < end) nl = 1;
-    var from  = strCountLines(query_value.substring(0,start));
-    var to    = strCountLines(query_value.substring(start,end - nl)) + from;
+//    var pos = getPos(query);
+//    start = pos[0];
+//    end   = pos[1];
+//    var nl = 0;
+//    if (start < end) nl = 1;
+//    var from  = strCountLines(query_value.substring(0,start));
+//    var to    = strCountLines(query_value.substring(start,end - nl)) + from;
 
-    var res = '';
-    var cnt = 0;
-    for(var i=0;i<lines.length;i++) {
-	if ( from <= i && i <= to ) {
-	    res += txt + lines[i];
-	    cnt++;
-	} else res += lines[i];
-	if (i < lines.length - 1) res += "\n";
-    }
-    query.value = res;
-    //alert(res.charAt(start - 1 - OAT.Browser.isIE));
-    if (!((res.charAt(start - 1 - OAT.Browser.isIE) == "\n" || start == 0) && start != end)) 
-      start = start + txt.length;
-
-    if (cnt > 1) end = end + (cnt * txt.length) - (OAT.Browser.isIE * (cnt - 1));
-    else end = end + txt.length;
-
-    setPos(query, start, end);
-    query.focus();
+//    var res = '';
+//    var cnt = 0;
+//    for(var i=0;i<lines.length;i++) {
+//	if ( from <= i && i <= to ) {
+//	    res += txt + lines[i];
+//	    cnt++;
+//	} else res += lines[i];
+//	if (i < lines.length - 1) res += "\n";
+//    }
+//    query.value = res;
+//    //alert(res.charAt(start - 1 - OAT.Browser.isIE));
+ //   if (!((res.charAt(start - 1 - OAT.Browser.isIE) == "\n" || start == 0) && start != end)) 
+//      start = start + txt.length;
+//
+//    if (cnt > 1) end = end + (cnt * txt.length) - (OAT.Browser.isIE * (cnt - 1));
+//    else end = end + txt.length;
+//
+//    setPos(query, start, end);
+//    query.focus();
 }
 
 
 function tool_rem_line_start(txt){
-    var query = $('query');
-    var query_value = $v('query').replace("\r",'');
-    var lines = query_value.split("\n");
-
-    var pos = getPos(query);
-    var start = pos[0];
-    var end   = pos[1];
-    var nl = 0;
-    if (start < end) nl = 1;
-    var from  = strCountLines(query_value.substring(0,start));
-    var to    = strCountLines(query_value.substring(start,end - nl)) + from;
-
-    var res = '';
-    var cnt = 0;
-    for(var i=0;i<lines.length;i++) {
-	if ( from <= i && i <= to && lines[i].substring(0,txt.length) == txt) {
-	    res += lines[i].substring(txt.length);
-	    cnt++;
-	} else res += lines[i];
-	if (i < lines.length - 1) res += "\n";
+    var line_obj = yasqe.getCursor();
+    if (yasqe.getLine(line_obj['line']).trim().startsWith('#')) {
+        var line = yasqe.getLine(line_obj['line']).replace('#', '');
+        yasqe.replaceRange(line, {line: line_obj['line'], ch:0}, {line: line_obj['line'], ch: yasqe.getLine(line_obj['line']).length});
     }
-    query.value = res;
-
-    if (cnt > 0) {
-	if (!((res.charAt(start - 1 - OAT.Browser.isIE) == "\n" || start == 0) && start != end)) start = start - txt.length;
-	if (cnt > 1) end = end - (cnt * txt.length) - (OAT.Browser.isIE * (cnt - 1));
-	else end = end - txt.length;
-    }
-    setPos(query, start, end);
-    query.focus();
+//    var query = $('query');
+//    var query_value = $v('query').replace("\r",'');
+//    var lines = query_value.split("\n");
+//
+//    var pos = getPos(query);
+//    var start = pos[0];
+//    var end   = pos[1];
+//    var nl = 0;
+//    if (start < end) nl = 1;
+//    var from  = strCountLines(query_value.substring(0,start));
+//    var to    = strCountLines(query_value.substring(start,end - nl)) + from;
+//
+//   var res = '';
+//    var cnt = 0;
+//    for(var i=0;i<lines.length;i++) {
+//	if ( from <= i && i <= to && lines[i].substring(0,txt.length) == txt) {
+//	    res += lines[i].substring(txt.length);
+//	    cnt++;
+//	} else res += lines[i];
+//	if (i < lines.length - 1) res += "\n";
+//    }
+//    query.value = res;
+//
+//    if (cnt > 0) {
+//	if (!((res.charAt(start - 1 - OAT.Browser.isIE) == "\n" || start == 0) && start != end)) start = start - txt.length;
+//	if (cnt > 1) end = end - (cnt * txt.length) - (OAT.Browser.isIE * (cnt - 1));
+//	else end = end - txt.length;
+//    }
+//    setPos(query, start, end);
+//    query.focus();
 }
 
 
