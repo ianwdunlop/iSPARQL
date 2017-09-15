@@ -257,6 +257,7 @@ iSPARQL.Advanced = function () {
 	} else {
   	var me = this;
     var request = new XMLHttpRequest();
+    $("maxrows").value != null ? o.query = o.query + " LIMIT " +  $("maxrows").value : '';
     request.open("POST", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(o.query), true);
     request.setRequestHeader('Accept', 'application/sparql-results+json');
     request.onreadystatechange = function () {
@@ -390,6 +391,7 @@ iSPARQL.RecentQueriesUI = function () {
 		self.qry_ctl.value = val;
 		self.sel_ctl.selectedIndex = 0;
 		iSPARQL.Common.setQuery($v("query"));
+    yasqe.setValue(val);
 	    }
 	}
     }
