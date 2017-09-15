@@ -1487,7 +1487,8 @@ iSPARQL.QBE = function (def_obj) {
 //	} else {
   	var me = this;
     var request = new XMLHttpRequest();
-    request.open("POST", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(p.query + " LIMIT 100"), true);
+    document.getElementById("maxrows").value != null ? p.query = p.query + " LIMIT " + document.getElementById("maxrows").value : '';
+    request.open("POST", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(p.query), true);
     request.setRequestHeader('Accept', 'application/sparql-results+json');
     request.onreadystatechange = function () {
         if (request.readyState != 4 || request.status != 200) return;
@@ -1495,7 +1496,6 @@ iSPARQL.QBE = function (def_obj) {
         tab.go(tab_results);
         yasr.setResponse(request.responseText);
 		}
-    var limit_query = p.query + " LIMIT 100";
     request.send(null);
 
 	//qe.execute(p);
