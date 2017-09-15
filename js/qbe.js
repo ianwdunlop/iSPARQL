@@ -763,17 +763,19 @@ iSPARQL.QBE = function (def_obj) {
 	    if (!schemaNode.children.length) { root.deleteChild(schemaNode); }
 	},
 	Update:function(node) { /* get Classes and Properties for a prefix */
+
     var me = self;
 	    if (node.children.length > 0) { return; } /* nothing when already fetched */
 	    var oldIcon = "";
 	    var oldFilter = "";
+      var schema_uri = schemas[node.schema];
     var query =   
 		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
 		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
 		'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n' +
 		'\n' +
 		'SELECT DISTINCT ?type ?uri ?label ?comment ?range \n' +
-		'FROM <' + node.schema + '> \n' +
+		'FROM <' + schema_uri + '> \n' +
 		'WHERE { \n ' +
 		'    		{\n ' +
 		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>) } UNION\n' +
@@ -786,7 +788,8 @@ iSPARQL.QBE = function (def_obj) {
 		'         OPTIONAL { ?uri rdfs:comment ?comment } .' + '\n' +
 		'         OPTIONAL { ?uri rdfs:range ?range } .' + '\n' +
 		'} ORDER BY ?uri';
-	  self.sponge_me ? query = 'define get:soft "soft" \n' + query : '';
+    // No more sponging
+	  //self.sponge_me ? query = 'define get:soft "soft" \n' + query : '';
     var request = new XMLHttpRequest();
     request.open("GET", iSPARQL.endpointOpts.endpointPath + "?query=" + encodeURIComponent(query), true);
     request.setRequestHeader('Accept', 'application/sparql-results+json');
