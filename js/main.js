@@ -2332,17 +2332,20 @@ function tool_rem_line_start(txt){
 
 
 function tool_put_around(btxt,atxt){
-    var elm = $('query');
-    var start = 0;
-    var end = 0;
+    var line_obj = yasqe.getCursor();
+    var line = btxt + yasqe.getLine(line_obj['line']) + atxt;
+    yasqe.replaceRange(line, {line: line_obj['line'], ch:0}, {line: line_obj['line'], ch: yasqe.getLine(line_obj['line']).length});
+//    var elm = $('query');
+//    var start = 0;
+//    var end = 0;
 
-    var pos = getPos(elm);
-    start = pos[0];
-    end   = pos[1];
+ //   var pos = getPos(elm);
+//    start = pos[0];
+//    end   = pos[1];
 
-    var txt = elm.value.substring(start,end);
+ //   var txt = elm.value.substring(start,end);
 
-    insert_text(elm,btxt + txt + atxt);
+//    insert_text(elm,btxt + txt + atxt);
 }
 
 
