@@ -576,7 +576,7 @@ iSPARQL.QBE = function (def_obj) {
 	    }
 	    var label = parts[2] || parts[0];
 	    var node = self.Schemas.MergeSchema(self.Schemas.Unbound,parts[0],schema,label);
-      node.prefix = prefix;
+      node.my_prefix = { 'prefix': label.replace(':', ''), 'namespace': schema };
 	    node.expand();
 	},
 	MergeSchema:function(parent,schema,graphSchema,label,bound) { /* insert a new prefix into schemas */
@@ -769,7 +769,7 @@ iSPARQL.QBE = function (def_obj) {
 	    if (node.children.length > 0) { return; } /* nothing when already fetched */
 	    var oldIcon = "";
 	    var oldFilter = "";
-      var label = node.prefix['label'];
+      var label = node.my_prefix['prefix'];
       var schema_graph = schemas[label]['graph'];
     var query =   
 		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
@@ -926,7 +926,7 @@ iSPARQL.QBE = function (def_obj) {
 		       if (node.uritype) {
 			   self.Schemas.Update(node);
 		       }
-		       if (node == self.Schemas.Unbound) { self.Schemas.Refresh(true); }
+		       //if (node == self.Schemas.Unbound) { self.Schemas.Refresh(true); }
 		   });
 
 
