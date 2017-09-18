@@ -1255,6 +1255,7 @@ OAT.SVGSparql = function(parentElm,paramsObj) {
 		self.fakeEdge.l1 = l1;
 		self.fakeEdge.l2 = l2;
 		self.fakeEdge.redraw = function() {
+      if (x1 != null && x2 != null) {
 			var x1 = self.fakeEdge._x1;
 			var x2 = self.fakeEdge._x2;
 			var y1 = self.fakeEdge._y1;
@@ -1268,6 +1269,7 @@ OAT.SVGSparql = function(parentElm,paramsObj) {
 			var y = (y2+y1)/2;
 			l1.setAttribute("y",y);
 			l2.setAttribute("y",y+self.options.fontOptions["font-size"]+2);
+      }
 		}
 		self.fakeEdge.unlink = function() {
 			OAT.Dom.unlink(l1);
