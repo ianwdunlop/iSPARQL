@@ -560,15 +560,15 @@ iSPARQL.QBE = function (def_obj) {
 	Bound:bound,
 	Unbound:unbound,
 	Imported:[],
-	Import:function(schema, silent) {
+	Import:function(schema, silent, prefix) {
 	    self.Schemas.Unbound.expand(true);
 	    if (self.Schemas.Imported.find(schema) != -1)	{
 		// if (!silent) { alert('Schema "' + schema + '" already imported!'); }
 		// return;
 	    } else { self.Schemas.Imported.push(schema); }
-	    self.Schemas.Add(schema);
+	    self.Schemas.Add(schema, prefix);
 	},
-	Add:function(schema) {
+	Add:function(schema, prefix) {
 	    var parts = self.getPrefixParts(schema);
 	    if (!parts) {
 		alert("Malformed schema!");
@@ -576,6 +576,7 @@ iSPARQL.QBE = function (def_obj) {
 	    }
 	    var label = parts[2] || parts[0];
 	    var node = self.Schemas.MergeSchema(self.Schemas.Unbound,parts[0],schema,label);
+      node.prefix = prefix;
 	    node.expand();
 	},
 	MergeSchema:function(parent,schema,graphSchema,label,bound) { /* insert a new prefix into schemas */
@@ -768,14 +769,15 @@ iSPARQL.QBE = function (def_obj) {
 	    if (node.children.length > 0) { return; } /* nothing when already fetched */
 	    var oldIcon = "";
 	    var oldFilter = "";
-      var schema_uri = schemas[node.schema];
+      var label = node.prefix['label'];
+      var schema_graph = schemas[label]['graph'];
     var query =   
 		'PREFIX owl: <http://www.w3.org/2002/07/owl#> \n' +
 		'PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#> \n' +
 		'PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n' +
 		'\n' +
 		'SELECT DISTINCT ?type ?uri ?label ?comment ?range \n' +
-		'FROM <' + schema_uri + '> \n' +
+		'FROM <' + schema_graph + '> \n' +
 		'WHERE { \n ' +
 		'    		{\n ' +
 		'        { ?uri a ?type . FILTER (?type = <http://www.w3.org/1999/02/22-rdf-syntax-ns#Property>) } UNION\n' +
@@ -1700,7 +1702,7 @@ iSPARQL.QBE = function (def_obj) {
 	    self.prefixes = sq.prefixes.concat(self.prefixes);
 	    self.Schemas.Reset();
 	    for (var i=0;i<sq.prefixes.length;i++)
-		self.Schemas.Import(sq.prefixes[i].uri,1);
+		self.Schemas.Import(sq.prefixes[i].uri,1, sq.prefixes[i]);
 
 	    $('qbe_graph').value = '';
 	    if (sq.from instanceof Array)  {
