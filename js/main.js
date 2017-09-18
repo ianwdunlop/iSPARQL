@@ -2247,7 +2247,11 @@ function tool_invoke(){
 }
 
 function tool_put(txt){
-    insert_text($('query'),txt);
+    //insert_text($('query'),txt);
+    yasqe.replaceSelection(txt);
+    //var line_obj = yasqe.getCursor();
+    //var line = '#' + yasqe.getLine(line_obj['line']);
+    //yasqe.replaceRange(line, {line: line_obj['line'], ch:0}, {line: line_obj['line'], ch: yasqe.getLine(line_obj['line']).length});
 }
 
 function tool_put_line_start(txt){
