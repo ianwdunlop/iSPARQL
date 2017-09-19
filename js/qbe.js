@@ -916,7 +916,8 @@ iSPARQL.QBE = function (def_obj) {
 		},
 		callback:callback
 	    }
-	    iSPARQL.QueryExec(params);
+      // do nothing - this doesn't really do what it thinks it does.
+	    //iSPARQL.QueryExec(params);
 	}
     }
 
@@ -1713,7 +1714,7 @@ iSPARQL.QBE = function (def_obj) {
 		    $('qbe_graph').value = sq.from.trim().match(/^<(.*)>$/)[1];
 
 	    for(var i = 0;i<sq.from_named.length ;i++)
-		self.addDataSource(sq.from_named.trim().match(/^<(.*)>$/)[1],'N');
+		self.addDataSource(sq.from_named[i].trim().match(/^<(.*)>$/)[1],'N');
 
 	    $('qbe_distinct').checked = sq.distinct;
 
