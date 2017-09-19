@@ -2129,7 +2129,7 @@ iSPARQL.QBE = function (def_obj) {
 		var tmp = label.match(/^\?(\w*)/);
 		var variable = tmp[1];
 		var desc = false;
-		if (self.orderby_grid.header.cells[i].sort == OAT.GridData.SORT_DESC)
+		if (self.orderby_grid.header.cells[i].options.sort == OAT.GridData.SORT_DESC)
 		    desc = true;
 		sq.orders.push({"desc": desc,"variable":variable});
 	    }
