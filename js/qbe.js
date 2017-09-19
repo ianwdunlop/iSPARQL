@@ -569,7 +569,15 @@ iSPARQL.QBE = function (def_obj) {
 	    self.Schemas.Add(schema, prefix);
 	},
 	Add:function(schema, prefix) {
-	    var parts = self.getPrefixParts(schema);
+      var parts;
+      if (schema.startsWith("http://")) {
+	        parts = self.getPrefixParts(schema);
+      } else {
+          parts = [];
+          parts[2] = schema.split(':')[0];
+          parts[0] = schema.split(parts[2] + ':')[1].trim();
+          schema = parts[0];
+      }
 	    if (!parts) {
 		alert("Malformed schema!");
 		return;
