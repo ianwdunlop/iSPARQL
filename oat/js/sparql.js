@@ -646,22 +646,22 @@ OAT.SparqlQuery = function() {
 			// from
 			if (self.from instanceof Array)  {
 				for (var i = 0;i<self.from.length ;i++) {
-					if (self.from[i]) { fullquery += "FROM " + self.from[i] + '\n'; }
+					if (self.from[i]) { fullquery += " FROM " + self.from[i] + '\n'; }
 				}
 			} else {
-				if (self.from) { fullquery += "FROM " + self.from + '\n'; }
+				if (self.from) { fullquery += " FROM " + self.from + '\n'; }
 			}
-			for (var i = 0;i<self.from_named.length ;i++) { fullquery += 'FROM NAMED ' + self.from_named[i] + '\n'; }
+			for (var i = 0;i<self.from_named.length ;i++) { fullquery += ' FROM NAMED ' + self.from_named[i] + '\n'; }
 
 			// where
 			var where = '';
 			if (self.where.type != 'group') {
 				where = '{\n' + self.genWhere(self.where,1) + '}';
 			} else { where = self.genWhere(self.where,0); }
-			fullquery += 'WHERE ' + where;
+			fullquery += ' WHERE ' + where;
 
 			if (self.orders.length > 0) {
-				fullquery += '\nORDER BY';
+				fullquery += '\n ORDER BY';
 				for(var i = 0;i<self.orders.length ;i++) {
 					var order = '?' + self.orders[i].variable;
 					if (self.orders[i].desc) { order = 'DESC(' + order + ')'; }
