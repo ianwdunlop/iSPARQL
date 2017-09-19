@@ -592,3 +592,11 @@ ul#tabgrph {
   visibility: hidden;
   height: 0;
 }
+#tabgrph {
+  visibility: hidden;
+  height: 0;
+}
+#tabgrph_content {
+  visibility: hidden;
+  height: 0;
+}
