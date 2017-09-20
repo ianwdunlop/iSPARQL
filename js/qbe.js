@@ -141,6 +141,7 @@ iSPARQL.GroupColorSeq = function() {
 
 iSPARQL.QBE = function (def_obj) {
     var self = this;
+    self.loaded_schemas = [];
 
     this.defaults = def_obj;
 
@@ -540,7 +541,7 @@ iSPARQL.QBE = function (def_obj) {
     var unbound = root.createChild('unbound',1);
     bound.collapse();
     unbound.collapse();
-    var ref_img = OAT.Dom.create('img',{width:'16px',height: '16px', verticalAlign: 'middle', marginLeft: '3px', cursor: 'pointer'});
+    var ref_img = OAT.Dom.create('img',{visibility: 'hidden', width:'0px',height: '0px', verticalAlign: 'middle', marginLeft: '3px', cursor: 'pointer'});
     ref_img.src = 'images/reload.png';
     unbound._gdElm.appendChild(ref_img);
     OAT.Event.attach(ref_img,"click",function(){
@@ -561,12 +562,22 @@ iSPARQL.QBE = function (def_obj) {
 	Unbound:unbound,
 	Imported:[],
 	Import:function(schema, silent, prefix) {
+      var label;
+      if (schema.startsWith("http://")) {
+	        label = self.getPrefixParts(schema)[0];
+      } else {
+          label = schema.split(':')[0];
+      }
 	    self.Schemas.Unbound.expand(true);
-	    if (self.Schemas.Imported.find(schema) != -1)	{
+	    if (self.loaded_schemas.includes(label))	{
 		// if (!silent) { alert('Schema "' + schema + '" already imported!'); }
 		// return;
-	    } else { self.Schemas.Imported.push(schema); }
-	    self.Schemas.Add(schema, prefix);
+         alert(label + " is already imported");
+         return;
+	    } else { 
+        self.Schemas.Imported.push(schema); 
+	      self.Schemas.Add(schema, prefix);
+      }
 	},
 	Add:function(schema, prefix) {
       var parts;
@@ -582,15 +593,24 @@ iSPARQL.QBE = function (def_obj) {
 		alert("Malformed schema!");
 		return;
 	    }
-	    var label = parts[2] || parts[0];
-	    var node = self.Schemas.MergeSchema(self.Schemas.Unbound,parts[0],schema,label);
-      node.my_prefix = { 'prefix': label.replace(':', ''), 'namespace': schema };
-	    node.expand();
+	  var label = parts[2] || parts[0];
+	  var node = self.Schemas.MergeSchema(self.Schemas.Unbound,parts[0],schema,label);
+    node.my_prefix = { 'prefix': label.replace(':', ''), 'namespace': schema };
+	  node.expand();
+    self.loaded_schemas.push(label);
 	},
 	MergeSchema:function(parent,schema,graphSchema,label,bound) { /* insert a new prefix into schemas */
+      var found = false;
 	    for (var i=0;i<parent.children.length;i++) {
-		if (parent.children[i].schema == schema) { return parent.children[i]; } /* we already have this */
-	    }
+          if (window.schemas[parent.children[i].getLabel()] != null && window.schemas[parent.children[i].getLabel()].namespace == label) {
+            return parent.children[i];
+          }
+      }
+	
+//	    for (var i=0;i<parent.children.length;i++) {
+//        if (window.schemas[parent.children[i].getLabel()] != null && window.schemas[parent.children[i].getLabel()].namespace == label) { return parent.children[i]; }
+		      //if (parent.children[i].my_prefix.prefix == label) { return parent.children[i]; } /* we already have this */
+//	    }
 	    var node = parent.createChild(label,1);
 	    node.setImage('rdf-icon-16');
 	    node.collapse();
